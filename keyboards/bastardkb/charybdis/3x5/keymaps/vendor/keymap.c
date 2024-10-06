@@ -65,7 +65,7 @@ static uint16_t auto_pointer_layer_timer = 0;
        KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, \
        KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L, ENT_SYM, \
        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, \
-                      ESC_MED, SPC_NAV, TAB_FUN, ENT_SYM, BSP_NUM
+                      TAB_FUN, SPC_NAV, ESC_MED, ENT_SYM, BSP_NUM
 
 /** Convenience row shorthands. */
 #define _______________DEAD_HALF_ROW_______________ XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
@@ -78,11 +78,11 @@ static uint16_t auto_pointer_layer_timer = 0;
                             &kp LC(A)    &trans     &kp TILDE          &kp LSHIFT  &kp ESC   &kp GRAVE
 */
 
-#define LAYOUT_LAYER_FUNCTION                                                                 \
-    KC_HOME, KC_UP, KC_END, KC_RETURN, KC_PLUS , KC_0,   KC_F7,   KC_F8,   KC_F9,  KC_F12, \
-    KC_LEFT, KC_DOWN, KC_RIGHT, KC_DEL, KC_EQUAL, KC_SCRL,   KC_F4,   KC_F5,   KC_F6,  KC_F11, \
-    _______________DEAD_HALF_ROW_______________, KC_PAUS,   KC_F1,   KC_F2,   KC_F3,  KC_F10, \
-                      XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX
+#define LAYOUT_LAYER_FUNCTION                                                                \
+    KC_HOME, KC_UP, KC_END, KC_ENT, KC_PLUS , KC_ASTERISK,   XXXXXXX,   KC_MINUS,   KC_QUOTE,  LALT(KC_BSPC), \
+    KC_LEFT, KC_DOWN, KC_RIGHT, KC_DEL, KC_EQUAL, XXXXXXX,   KC_BSPC,   KC_UNDERSCORE,   KC_DOT,  KC_SEMICOLON, \
+    LGUI(KC_C), LGUI(KC_V),  KC_LEFT_ALT, KC_BSPC, KC_BACKSLASH, KC_PIPE, XXXXXXX, KC_LEFT_ANGLE_BRACKET,   KC_RIGHT_ANGLE_BRACKET,  KC_QUESTION, \
+                      LALT(KC_A), XXXXXXX, KC_TILDE, KC_LEFT_SHIFT, KC_ESC
 
 /**
  * \brief Media layer.
