@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
-#include combo.h
+#include <combo.h>
 
 #define COMBO_TERM 50  // Set combo timeout to 50 ms (you can adjust this value)
 
