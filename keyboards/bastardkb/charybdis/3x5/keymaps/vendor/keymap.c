@@ -15,10 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
-#include <combo.h>
-
-#define COMBO_TERM 50  // Set combo timeout to 50 ms (you can adjust this value)
-
 #ifdef CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 #    include "timer.h"
 #endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
@@ -62,11 +58,18 @@ static uint16_t auto_pointer_layer_timer = 0;
 #    define SNIPING KC_NO
 #endif // !POINTING_DEVICE_ENABLE
 
-const uint16_t PROGMEM test_combo1[] = {KC_W, KC_E, COMBO_END};
-const uint16_t PROGMEM test_combo2[] = {KC_C, KC_D, COMBO_END};
+enum combos { CV_LEFT, VB_RGHT, NM_UP, MCOMM_DOWN };
+
+const uint16_t PROGMEM vb_combo[]    = {KC_V, KC_B, COMBO_END};
+const uint16_t PROGMEM cv_combo[]    = {KC_C, KC_V, COMBO_END};
+const uint16_t PROGMEM nm_combo[]    = {KC_N, KC_M, COMBO_END};
+const uint16_t PROGMEM mcomm_combo[] = {KC_M, KC_COMM, COMBO_END};
+
 combo_t key_combos[] = {
-    COMBO(test_combo1, KC_AT),
-    COMBO(test_combo2, LCTL(KC_Z)), // keycodes with modifiers are possible too!
+    [VB_RGHT]    = COMBO(vb_combo, KC_RIGHT),
+    [CV_LEFT]    = COMBO(cv_combo, KC_LEFT),
+    [NM_UP]      = COMBO(nm_combo, KC_UP),
+    [MCOMM_DOWN] = COMBO(mcomm_combo, KC_DOWN),
 };
 
 // clang-format off
