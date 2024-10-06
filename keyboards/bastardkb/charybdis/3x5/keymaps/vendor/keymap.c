@@ -59,6 +59,13 @@ static uint16_t auto_pointer_layer_timer = 0;
 #    define SNIPING KC_NO
 #endif // !POINTING_DEVICE_ENABLE
 
+const uint16_t PROGMEM test_combo1[] = {KC_W, KC_E, COMBO_END};
+const uint16_t PROGMEM test_combo2[] = {KC_C, KC_D, COMBO_END};
+combo_t key_combos[] = {
+    COMBO(test_combo1, KC_AT),
+    COMBO(test_combo2, LCTL(KC_Z)), // keycodes with modifiers are possible too!
+};
+
 // clang-format off
 /** \brief QWERTY layout (3 rows, 10 columns). */
 #define LAYOUT_LAYER_BASE                                                                     \
@@ -71,25 +78,14 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define _______________DEAD_HALF_ROW_______________ XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
 #define ______________HOME_ROW_GACS_L______________ KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX
 #define ______________HOME_ROW_GACS_R______________ XXXXXXX, KC_LSFT, KC_LCTL, KC_LALT, KC_LGUI
-/*
-   &kp HOME   &kp UP       &kp END        &kp RET     &kp KP_PLUS         &kp KP_MULTIPLY    &kp LG(LC(RIGHT))    &kp MINUS      &kp SQT     &kp LC(BSPC)
-   &kp LEFT   &kp DOWN     &kp RIGHT      &kp DEL     &kp EQUAL           &kp LC(LA(TAB))    &kp BSPC             &kp UNDER      &kp DQT     &kp COLON
-   &kp LC(C)  &kp LC(V)    &kp LALT       &kp BSPC    &kp BSLH            &kp PIPE           &kp LG(LC(LEFT))     &kp LT         &kp GT      &kp QMARK
-                            &kp LC(A)    &trans     &kp TILDE          &kp LSHIFT  &kp ESC   &kp GRAVE
-*/
 
 #define LAYOUT_LAYER_FUNCTION                                                                \
-    KC_HOME, KC_UP, KC_END, KC_ENT, KC_PLUS , KC_ASTERISK,   XXXXXXX,   KC_MINUS,   KC_QUOTE,  LALT(KC_BSPC), \
-    KC_LEFT, KC_DOWN, KC_RIGHT, KC_DEL, KC_EQUAL, XXXXXXX,   KC_BSPC,   KC_UNDERSCORE,   KC_DOT,  KC_SEMICOLON, \
+    KC_HOME, KC_UP, KC_END, KC_ENT, KC_PLUS, KC_ASTERISK,   XXXXXXX,   KC_MINUS,   KC_QUOTE,  LALT(KC_BSPC), \
+    KC_LEFT, KC_DOWN, KC_RIGHT, KC_DEL, KC_EQUAL, XXXXXXX,   KC_BSPC,   KC_UNDERSCORE,   KC_DOUBLE_QUOTE,  KC_SEMICOLON, \
     LGUI(KC_C), LGUI(KC_V),  KC_LEFT_ALT, KC_BSPC, KC_BACKSLASH, KC_PIPE, XXXXXXX, KC_LEFT_ANGLE_BRACKET,   KC_RIGHT_ANGLE_BRACKET,  KC_QUESTION, \
                       LALT(KC_A), XXXXXXX, KC_TILDE, KC_LEFT_SHIFT, KC_ESC
 
-/**
- * \brief Media layer.
- *
- * Tertiary left- and right-hand layer is media and RGB control.  This layer is
- * symmetrical to accomodate the left- and right-hand trackball.
- */
+
 #define LAYOUT_LAYER_MEDIA                                                                    \
     XXXXXXX,RGB_RMOD, RGB_TOG, RGB_MOD, XXXXXXX, XXXXXXX,RGB_RMOD, RGB_TOG, RGB_MOD, XXXXXXX, \
     KC_MPRV, KC_VOLD, KC_MUTE, KC_VOLU, KC_MNXT, KC_MPRV, KC_VOLD, KC_MUTE, KC_VOLU, KC_MNXT, \
