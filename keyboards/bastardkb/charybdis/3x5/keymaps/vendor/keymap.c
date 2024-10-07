@@ -57,7 +57,7 @@ static uint16_t auto_pointer_layer_timer = 0;
 #ifndef POINTING_DEVICE_ENABLE
 #    define DRGSCRL KC_NO
 #    define DPI_MOD KC_NO
-#    define S_D_MOD KC_NO
+#    define S_D_MOD KC_N
 #    define SNIPING KC_NO
 #endif // !POINTING_DEVICE_ENABLE
 
@@ -117,11 +117,15 @@ combo_t key_combos[] = {
 
 // clang-format off
 /** \brief QWERTY layout (3 rows, 10 columns). */
+// TAB_FUN = MOUSE
+// SPC_NAV = MAIN_LAYER 1
+// ESC_MED = NUMBERS
+// 
 #define LAYOUT_LAYER_BASE                                                                     \
        KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, \
        KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L, ENT_SYM, \
        KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, \
-                      TAB_FUN, SPC_NAV, ESC_MED, ENT_SYM, BSP_NUM
+                      TAB_FUN, SPC_NAV, ESC_MED, KC_LSFT, BSP_NUM 
 
 /** Convenience row shorthands. */
 #define _______________DEAD_HALF_ROW_______________ XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
@@ -136,9 +140,9 @@ combo_t key_combos[] = {
 
 
 #define LAYOUT_LAYER_MEDIA                                                                    \
-    XXXXXXX,RGB_RMOD, RGB_TOG, RGB_MOD, XXXXXXX, XXXXXXX,RGB_RMOD, RGB_TOG, RGB_MOD, XXXXXXX, \
-    KC_MPRV, KC_VOLD, KC_MUTE, KC_VOLU, KC_MNXT, KC_MPRV, KC_VOLD, KC_MUTE, KC_VOLU, KC_MNXT, \
-    XXXXXXX, XXXXXXX, XXXXXXX,  EE_CLR, QK_BOOT, QK_BOOT,  EE_CLR, XXXXXXX, XXXXXXX, XXXXXXX, \
+    XXXXXXX,RGB_RMOD, RGB_TOG, RGB_MOD, XXXXXXX, XXXXXXX, KC_7, KC_8, KC_9, KC_DOT, \
+    KC_MPRV, KC_VOLD, KC_MUTE, KC_VOLU, KC_MNXT, XXXXXXX, KC_4, KC_5, KC_6, KC_MINUS, \
+    XXXXXXX, XXXXXXX, XXXXXXX,  EE_CLR, QK_BOOT, KC_0,    KC_1, KC_2, KC_3, KC_QUESTION, \
                       _______, KC_MPLY, KC_MSTP, KC_MSTP, KC_MPLY
 
 /** \brief Mouse emulation and pointer functions. */
@@ -161,19 +165,18 @@ combo_t key_combos[] = {
     ______________HOME_ROW_GACS_L______________, KC_CAPS, KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, \
     _______________DEAD_HALF_ROW_______________,  KC_INS, KC_HOME, KC_PGDN, KC_PGUP,  KC_END, \
                       XXXXXXX, _______, XXXXXXX,  KC_ENT, KC_BSPC
+/*
+&kp LPAR    &kp LS(LC(HOME))          &trans    &kp LS(LC(END))            &kp EXCL        &kp DOLLAR &kp PRCNT     &kp CARET         &kp 0     &kp RPAR
+&kp LBRC    &kp LS(LC(LEFT))          &kp KP_N5     &kp LS(LC(RIGHT))          &kp AT          &kp MINUS  &kp TAB       &kp HASH          &kp SEMI       &kp RBRC
+&kp LBKT    &kp KP_N1                 &kp KP_N2     &kp KP_N3  &kp KP_N0       &kp AMPS   &bt BT_SEL 0  &bt BT_SEL 1      &bt BT_SEL 2   &kp RBKT
+                    &kp LALT  &mo 1 &kp LC(DEL)             &kp LS(FSLH)      &trans         &kp LS(TAB)
+*/
 
-/**
- * \brief Numeral layout.
- *
- * Primary left-hand layer (right home thumb) is numerals and symbols. Numerals
- * are in the standard numpad locations with symbols in the remaining positions.
- * `KC_DOT` is duplicated from the base layer.
- */
 #define LAYOUT_LAYER_NUMERAL                                                                  \
-    KC_LBRC,    KC_7,    KC_8,    KC_9, KC_RBRC, _______________DEAD_HALF_ROW_______________, \
-    KC_SCLN,    KC_4,    KC_5,    KC_6,  KC_EQL, ______________HOME_ROW_GACS_R______________, \
-     KC_GRV,    KC_1,    KC_2,    KC_3, KC_BSLS, _______________DEAD_HALF_ROW_______________, \
-                       KC_DOT,    KC_0, KC_MINS, XXXXXXX, _______
+    LSFT(KC_9),       LGUI(KC_HOME),    LGUI(KC_END),    KC_9, KC_RBRC, LSFT(KC_4),LSFT(KC_5),LSFT(KC_6),XXXXXXX,LSFT(KC_0) \
+    LSFT(KC_LBRC),    XXXXXXX,    KC_5,    KC_6,  KC_EQL, XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,LSFT(KC_RBRC) \
+    KC_LBRC,          KC_1,    KC_2,    KC_3, KC_BSLS, XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,KC_RBRC \
+                      KC_DOT,    KC_0, KC_MINS, XXXXXXX, _______
 
 /**
  * \brief Symbols layer.
