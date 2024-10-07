@@ -173,9 +173,9 @@ combo_t key_combos[] = {
 */
 
 #define LAYOUT_LAYER_NUMERAL                                                                  \
-    LSFT(KC_9),       LGUI(KC_HOME),    LGUI(KC_END),    KC_9, KC_RBRC, LSFT(KC_4),LSFT(KC_5),LSFT(KC_6),XXXXXXX,LSFT(KC_0) \
-    LSFT(KC_LBRC),    XXXXXXX,    KC_5,    KC_6,  KC_EQL, XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,LSFT(KC_RBRC) \
-    KC_LBRC,          KC_1,    KC_2,    KC_3, KC_BSLS, XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,KC_RBRC \
+    LSFT(KC_9),       LGUI(KC_HOME),    LGUI(KC_END),    KC_9, KC_RBRC, LSFT(KC_4),LSFT(KC_5),LSFT(KC_6),XXXXXXX,LSFT(KC_0), \
+    LSFT(KC_LBRC),    XXXXXXX,    KC_5,    KC_6,  KC_EQL, XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,LSFT(KC_RBRC), \
+    KC_LBRC,          KC_1,    KC_2,    KC_3, KC_BSLS, XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,KC_RBRC, \
                       KC_DOT,    KC_0, KC_MINS, XXXXXXX, _______
 
 /**
