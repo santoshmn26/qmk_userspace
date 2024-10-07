@@ -14,6 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+ // command key = Windows
+ // Option key = ALT
+
 #include QMK_KEYBOARD_H
 #ifdef CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 #    include "timer.h"
@@ -45,7 +48,7 @@ static uint16_t auto_pointer_layer_timer = 0;
 #endif     // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
 #define ESC_MED LT(LAYER_MEDIA, KC_ESC)
-#define SPC_NAV LT(LAYER_NAVIGATION, KC_SPC)
+#define SPC_NAV LT(LAYER_FUNCTION, KC_SPC)
 #define TAB_FUN LT(LAYER_FUNCTION, KC_TAB)
 #define ENT_SYM LT(LAYER_SYMBOLS, KC_ENT)
 #define BSP_NUM LT(LAYER_NUMERAL, KC_BSPC)
@@ -58,18 +61,58 @@ static uint16_t auto_pointer_layer_timer = 0;
 #    define SNIPING KC_NO
 #endif // !POINTING_DEVICE_ENABLE
 
-enum combos { CV_LEFT, VB_RGHT, NM_UP, MCOMM_DOWN };
+enum combos { 
+    WE_AT,
+    SD_TAB,
+    XC_PASTE,
+    KL_HASH,
+    CV_EXCLAMATION,
+    JK_EQUAL,
+    KL_PLUS,
+    UI_STAR,
+    UIO_NEXT_DESKTOP,
+    QWE_PREV_DESKTOP,
+    JKL_TERMINAL_SWITCH,
+    M_UNDO,
+    OP_SELECT_TILL_END,
+    QW_SELECT_TILL_START,
+    SF_SHIFT_TAB
+};
 
-const uint16_t PROGMEM vb_combo[]    = {KC_V, KC_B, COMBO_END};
-const uint16_t PROGMEM cv_combo[]    = {KC_C, KC_V, COMBO_END};
-const uint16_t PROGMEM nm_combo[]    = {KC_N, KC_M, COMBO_END};
-const uint16_t PROGMEM mcomm_combo[] = {KC_M, KC_COMM, COMBO_END};
+const uint16_t PROGMEM at_combo[]       = {KC_W, KC_E, COMBO_END};           // we @
+const uint16_t PROGMEM tab_combo[]      = {KC_S, KC_D, COMBO_END};           // sd TAB
+const uint16_t PROGMEM paste_combo[]    = {KC_X, KC_C, COMBO_END};           // xc PASTE
+const uint16_t PROGMEM hash_combo[]     = {KC_K, KC_L, COMBO_END};           // kl HASH
+const uint16_t PROGMEM and_combo[]      = {KC_COMM, KC_DOT, COMBO_END};      // ,. AND
+const uint16_t PROGMEM and_combo[]      = {KC_C, KC_V, COMBO_END};           // cv EXCLAMATION
+const uint16_t PROGMEM equal_combo[]    = {KC_J, KC_K, COMBO_END};           // jk EQUAL
+const uint16_t PROGMEM plus_combo[]     = {KC_M, KC_COMM, COMBO_END};        // kl PLUS
+const uint16_t PROGMEM star_combo[]     = {KC_U, KC_I, COMBO_END};           // ui STAR
+const uint16_t PROGMEM nextw_combo[]    = {KC_U, KC_I, KC_O, COMBO_END};     // uio NEXT DESKTOP
+const uint16_t PROGMEM prev_combo[]     = {KC_Q, KC_W, KC_E, COMBO_END};     // qwe PREV DESKTOP
+const uint16_t PROGMEM prev_combo[]     = {KC_J, KC_K, KC_L, COMBO_END};     // jkl TERMINAL SWITCH
+const uint16_t PROGMEM undo_combo[]     = {KC_M, KC_COMM, KC_DOT, COMBO_END}; // m,. UNDO
+const uint16_t PROGMEM s_end_combo[]    = {KC_O, KC_P, COMBO_END};            // op SELECT TILL END
+const uint16_t PROGMEM s_start_combo[]  = {KC_Q, KC_W, COMBO_END};            // qw SELECT TILL START
+const uint16_t PROGMEM s_tab_combo[]    = {KC_S, KC_F, COMBO_END};            // sf SHIFT TAB
+
 
 combo_t key_combos[] = {
-    [VB_RGHT]    = COMBO(vb_combo, KC_RIGHT),
-    [CV_LEFT]    = COMBO(cv_combo, KC_LEFT),
-    [NM_UP]      = COMBO(nm_combo, KC_UP),
-    [MCOMM_DOWN] = COMBO(mcomm_combo, KC_DOWN),
+    [WE_AT]      = COMBO(at_combo, KC_AT),
+    [SD_TAB]     = COMBO(tab_combo, KC_TAB),
+    [XC_PASTE]   = COMBO(paste_combo, LGUI(KC_V)),
+    [KL_HASH]    = COMBO(hash_combo, KC_HASH),
+    [CV_EXCLAMATION] = COMBO(and_combo, KC_EXCLAIM),
+    [JK_EQUAL]   = COMBO(equal_combo, KC_EQUAL),
+    [KL_PLUS]    = COMBO(plus_combo, KC_PLUS),
+    [UI_STAR]    = COMBO(star_combo, KC_ASTERISK),
+    [UIO_NEXT_DESKTOP] = COMBO(nextw_combo, LCTRL(KC_RIGHT)),
+    [QWE_PREV_DESKTOP] = COMBO(prev_combo, LCTRL(KC_LEFT)),
+    [JKL_TERMINAL_SWITCH] = COMBO(prev_combo, LCTRL(LSFT(KC_T))),
+    [M_UNDO]     = COMBO(undo_combo, LGUI(KC_Z)),
+    [OP_SELECT_TILL_END] = COMBO(s_end_combo, LSFT(KC_END)),
+    [QW_SELECT_TILL_START] = COMBO(s_start_combo, LSFT(KC_HOME)),
+    [SF_SHIFT_TAB] = COMBO(s_tab_combo, LSFT(KC_TAB))
 };
 
 // clang-format off
