@@ -51,7 +51,7 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define SPC_NAV LT(LAYER_FUNCTION, KC_SPC)
 #define TAB_FUN LT(LAYER_POINTER, KC_TAB)
 #define ENT_SYM LT(LAYER_SYMBOLS, KC_ENT)
-#define BSP_NUM LT(LAYER_NUMERAL, KC_BSPC)
+#define BSP_NUM LT(LAYER_NUMERAL, KC_LSFT)
 #define _L_PTR(KC) LT(LAYER_POINTER, KC)
 
 #ifndef POINTING_DEVICE_ENABLE
@@ -89,13 +89,12 @@ const uint16_t PROGMEM equal_combo[]    = {KC_J, KC_K, COMBO_END};           // 
 const uint16_t PROGMEM plus_combo[]     = {KC_M, KC_COMM, COMBO_END};        // kl PLUS
 const uint16_t PROGMEM star_combo[]     = {KC_U, KC_I, COMBO_END};           // ui STAR
 const uint16_t PROGMEM nextw_combo[]    = {KC_U, KC_I, KC_O, COMBO_END};     // uio NEXT DESKTOP
-const uint16_t PROGMEM prev_combo[]     = {KC_Q, KC_W, KC_E, COMBO_END};     // qwe PREV DESKTOP
+const uint16_t PROGMEM prev_combo[]     = {KC_W, KC_E, KC_R, COMBO_END};     // qwe PREV DESKTOP
 const uint16_t PROGMEM term_combo[]     = {KC_J, KC_K, KC_L, COMBO_END};     // jkl TERMINAL SWITCH
 const uint16_t PROGMEM undo_combo[]     = {KC_M, KC_COMM, KC_DOT, COMBO_END}; // m,. UNDO
 const uint16_t PROGMEM s_end_combo[]    = {KC_O, KC_P, COMBO_END};            // op SELECT TILL END
 const uint16_t PROGMEM s_start_combo[]  = {KC_Q, KC_W, COMBO_END};            // qw SELECT TILL START
 const uint16_t PROGMEM s_tab_combo[]    = {KC_S, KC_F, COMBO_END};            // sf SHIFT TAB
-
 
 combo_t key_combos[] = {
     [WE_AT]      = COMBO(at_combo, KC_AT),
@@ -133,17 +132,16 @@ combo_t key_combos[] = {
 #define ______________HOME_ROW_GACS_R______________ XXXXXXX, KC_LSFT, KC_LCTL, KC_LALT, KC_LGUI
 
 #define LAYOUT_LAYER_FUNCTION                                                                \
-    KC_HOME, KC_UP, KC_END, KC_ENT, KC_PLUS, KC_ASTERISK,   XXXXXXX,   KC_MINUS,   KC_QUOTE,  LALT(KC_BSPC), \
+    KC_HOME, KC_UP, KC_END, KC_ENT, KC_PLUS, KC_ASTERISK,   LSFT(KC_TAB),  KC_MINUS,   KC_QUOTE,  LALT(KC_BSPC), \
     KC_LEFT, KC_DOWN, KC_RIGHT, KC_DEL, KC_EQUAL, XXXXXXX,   KC_BSPC,   KC_UNDERSCORE,   KC_DOUBLE_QUOTE,  KC_SEMICOLON, \
     LGUI(KC_C), LGUI(KC_V),  KC_LEFT_ALT, KC_BSPC, KC_BACKSLASH, KC_PIPE, XXXXXXX, KC_LEFT_ANGLE_BRACKET,   KC_RIGHT_ANGLE_BRACKET,  KC_QUESTION, \
-                      LALT(KC_A), XXXXXXX, KC_TILDE, KC_LEFT_SHIFT, KC_ESC
-
+                      LGUI(KC_A), XXXXXXX, KC_TILDE, KC_TAB, KC_ESC 
 
 #define LAYOUT_LAYER_MEDIA                                                                    \
-    XXXXXXX,RGB_RMOD, RGB_TOG, RGB_MOD, XXXXXXX, XXXXXXX, KC_7, KC_8, KC_9, KC_DOT, \
-    KC_MPRV, KC_VOLD, KC_MUTE, KC_VOLU, KC_MNXT, XXXXXXX, KC_4, KC_5, KC_6, KC_MINUS, \
+    XXXXXXX,RGB_RMOD, RGB_TOG, RGB_MOD, XXXXXXX, KC_CAPS_LOCK, KC_7, KC_8, KC_9, KC_DOT, \
+    KC_MPRV, KC_VOLD, KC_MUTE, LGUI(KC_F), KC_MNXT, XXXXXXX, KC_4, KC_5, KC_6, KC_MINUS, \
     XXXXXXX, XXXXXXX, XXXXXXX,  EE_CLR, QK_BOOT, KC_0,    KC_1, KC_2, KC_3, KC_QUESTION, \
-                      _______, KC_MPLY, KC_MSTP, KC_MSTP, KC_MPLY
+                      _______, KC_MPLY, KC_MSTP, KC_MSTP, KC_EQUAL
 
 /** \brief Mouse emulation and pointer functions. */
 #define LAYOUT_LAYER_POINTER                                                                  \
@@ -152,7 +150,7 @@ combo_t key_combos[] = {
     _______, MS_BTN1, MS_BTN2, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, MS_WHLU, MS_WHLD, _______, \
                       KC_BTN2, KC_BTN1, KC_BTN3, KC_BTN3, KC_BTN1
 
-/**
+z/**
  * \brief Navigation layer.
  *
  * Primary right-hand layer (left home thumb) is navigation and editing. Cursor
