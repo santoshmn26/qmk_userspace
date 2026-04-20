@@ -6,6 +6,7 @@ enum layers {
     LAYER_SYM,
     LAYER_NUM,
     LAYER_SHORTCUT,
+    LAYER_MOUSE,
 };
 
 enum tap_dance_codes {
@@ -15,14 +16,13 @@ enum tap_dance_codes {
 enum custom_keycodes {
     AT_OR_HIDE = SAFE_RANGE, // W+E: KC_AT on DEFAULT, LCTL(KC_B) on NAV
     AND_OR_DOT,              // ,+.: KC_AMPR on DEFAULT, KC_DOT on NUM
+    APP_SWITCH,              // Hold: LGUI down + TAB; release: LGUI up
 };
 
 // ── Combo key arrays ────────────────────────────────────────────
 const uint16_t PROGMEM hash_combo[]        = {KC_K,    KC_L,                              COMBO_END};
 const uint16_t PROGMEM we_combo[]          = {KC_W,    KC_E,                              COMBO_END};
 const uint16_t PROGMEM mul_combo[]         = {KC_U,    KC_I,                              COMBO_END};
-const uint16_t PROGMEM scrl_up_combo[]     = {KC_Y,    KC_U,                              COMBO_END};
-const uint16_t PROGMEM scrl_dn_combo[]     = {KC_H,    KC_J,                              COMBO_END};
 const uint16_t PROGMEM equal_combo[]       = {KC_J,    KC_K,                              COMBO_END};
 const uint16_t PROGMEM plus_combo[]        = {KC_M,    KC_COMM,                           COMBO_END};
 const uint16_t PROGMEM comma_dot_combo[]   = {KC_COMM, KC_DOT,                            COMBO_END};
@@ -32,7 +32,6 @@ const uint16_t PROGMEM shift_tab_combo[]   = {KC_S,    KC_F,                    
 const uint16_t PROGMEM sel_home_combo[]    = {KC_Q,    KC_W,                              COMBO_END};
 const uint16_t PROGMEM sel_end_combo[]     = {KC_O,    KC_P,                              COMBO_END};
 const uint16_t PROGMEM paste_hist_combo[]  = {KC_X,    KC_C,                              COMBO_END};
-const uint16_t PROGMEM bksp_combo[]        = {KC_L,    KC_ENT,                            COMBO_END};
 const uint16_t PROGMEM cmd_palette_combo[] = {KC_D,    KC_K,                              COMBO_END};
 const uint16_t PROGMEM find_combo[]        = {KC_F,    KC_J,                              COMBO_END};
 const uint16_t PROGMEM top_combo[]         = {KC_W,    KC_R,                              COMBO_END};
@@ -51,14 +50,13 @@ const uint16_t PROGMEM edge_combo[]        = {KC_X,    KC_DOT,                  
 const uint16_t PROGMEM term_app_combo[]    = {KC_B,    KC_N,                              COMBO_END};
 const uint16_t PROGMEM claude_combo[]      = {KC_V,    KC_M,                              COMBO_END};
 const uint16_t PROGMEM lgui_a_combo[]      = {KC_J,    KC_L,                              COMBO_END};
+const uint16_t PROGMEM nav_89_combo[]      = {KC_I,    KC_O,                              COMBO_END};
 
 // ── Combo index enum ────────────────────────────────────────────
 enum combo_events {
     COMBO_HASH,
     COMBO_AT_HIDE,
     COMBO_MUL,
-    COMBO_SCROLL_UP,
-    COMBO_SCROLL_DOWN,
     COMBO_EQUAL,
     COMBO_PLUS,
     COMBO_AND_DOT,
@@ -68,7 +66,6 @@ enum combo_events {
     COMBO_SEL_HOME,
     COMBO_SEL_END,
     COMBO_PASTE_HIST,
-    COMBO_BKSP,
     COMBO_CMD_PALETTE,
     COMBO_FIND,
     COMBO_TOP,
@@ -87,15 +84,14 @@ enum combo_events {
     COMBO_TERMINAL_APP,
     COMBO_CLAUDE_APP,
     COMBO_LGUI_A,
+    COMBO_NAV_89,
 };
 
 // ── Combo table ─────────────────────────────────────────────────
 combo_t key_combos[] = {
-    [COMBO_HASH]           = COMBO(hash_combo,        KC_HASH),
+    [COMBO_HASH]           = COMBO_ACTION(hash_combo),
     [COMBO_AT_HIDE]        = COMBO(we_combo,          AT_OR_HIDE),
     [COMBO_MUL]            = COMBO(mul_combo,         KC_KP_ASTERISK),
-    [COMBO_SCROLL_UP]      = COMBO(scrl_up_combo,     MS_WHLU),
-    [COMBO_SCROLL_DOWN]    = COMBO(scrl_dn_combo,     MS_WHLD),
     [COMBO_EQUAL]          = COMBO(equal_combo,       KC_EQL),
     [COMBO_PLUS]           = COMBO(plus_combo,        KC_KP_PLUS),
     [COMBO_AND_DOT]        = COMBO(comma_dot_combo,   AND_OR_DOT),
@@ -105,7 +101,6 @@ combo_t key_combos[] = {
     [COMBO_SEL_HOME]       = COMBO(sel_home_combo,    LSFT(KC_HOME)),
     [COMBO_SEL_END]        = COMBO(sel_end_combo,     LSFT(KC_END)),
     [COMBO_PASTE_HIST]     = COMBO(paste_hist_combo,  LGUI(KC_V)),
-    [COMBO_BKSP]           = COMBO(bksp_combo,        KC_BSPC),
     [COMBO_CMD_PALETTE]    = COMBO(cmd_palette_combo, LCTL(LSFT(KC_P))),
     [COMBO_FIND]           = COMBO(find_combo,        LCTL(KC_F)),
     [COMBO_TOP]            = COMBO(top_combo,         LCTL(KC_HOME)),
@@ -124,19 +119,28 @@ combo_t key_combos[] = {
     [COMBO_TERMINAL_APP]   = COMBO(term_app_combo,    MEH(KC_T)),
     [COMBO_CLAUDE_APP]     = COMBO(claude_combo,      MEH(KC_S)),
     [COMBO_LGUI_A]         = COMBO(lgui_a_combo,      LGUI(KC_A)),
+    [COMBO_NAV_89]         = COMBO_ACTION(nav_89_combo),
 };
+// --------------------------------------------------------------
+// keyboard structure:
+// 1    2    3    4    5                              6    7    8    9    10
+// 11   12   13   14   15                             16   17   18   19   20
+// 21   22   23   24   25                             26   27   28   29   30
+// --        31   32   33                             35   35 (trackball)
+// --------------------------------------------------------------
+
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [LAYER_DEFAULT] = LAYOUT(
-        KC_Q,           KC_W,   KC_E,   KC_R,   KC_T,       KC_Y,   KC_U,    KC_I,    KC_O,   KC_P,
-        KC_A,           KC_S,   KC_D,   KC_F,   KC_G,       KC_H,   KC_J,    KC_K,    KC_L,   KC_ENT,
-        LCTL_T(KC_Z),   KC_X,   KC_C,   KC_V,   KC_B,       KC_N,   KC_M,    KC_COMM, KC_DOT, LT(LAYER_SHORTCUT, KC_SLSH),
-                KC_LGUI, MO(LAYER_NAV), LT(LAYER_NUM, KC_SPC),       TD(TD_SHIFT_CAPS), MO(LAYER_SYM)
+        KC_Q,              KC_W,   KC_E,   KC_R,   KC_T,       KC_Y,   KC_U,    KC_I,    KC_O,   KC_P,
+        KC_A,              KC_S,   KC_D,   KC_F,   KC_G,       KC_H,   KC_J,    KC_K,    KC_L,   KC_ENT,
+        LGUI_T(KC_Z),      KC_X,   KC_C,   KC_V,   KC_B,       KC_N,   KC_M,    KC_COMM, KC_DOT, LT(LAYER_SHORTCUT, KC_SLSH),
+                LT(LAYER_MOUSE, KC_LGUI), LT(LAYER_NAV, KC_SPC), LT(LAYER_NUM, KC_SPC),       TD(TD_SHIFT_CAPS), MO(LAYER_SYM)
     ),
 
     [LAYER_NAV] = LAYOUT(
-        KC_HOME,    KC_UP,      KC_END,     KC_ENT,  KC_KP_PLUS,         KC_KP_ASTERISK,      LGUI(LCTL(KC_RGHT)), KC_MINS, KC_QUOT,  LALT(KC_BSPC),
+        KC_HOME,    KC_UP,      KC_END,     KC_ENT,  KC_KP_PLUS,         KC_KP_ASTERISK,      KC_COMM,             KC_MINS, KC_QUOT,  LALT(KC_BSPC),
         KC_LEFT,    KC_DOWN,    KC_RGHT,    KC_DEL,  KC_EQL,             LCTL(LALT(KC_TAB)),  KC_BSPC,             KC_UNDS, KC_DQUO,  KC_COLN,
         LCTL(KC_C), LCTL(KC_V), KC_LALT,   KC_BSPC, KC_BSLS,            KC_PIPE,             LGUI(LCTL(KC_LEFT)), KC_LT,   KC_GT,    KC_QUES,
                         LCTL(KC_A), _______, KC_TILD,                    KC_LSFT, KC_ESC
@@ -145,7 +149,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [LAYER_SYM] = LAYOUT(
         KC_LPRN, LGUI(KC_LEFT),        LGUI(KC_UP),   LGUI(KC_RGHT),        LGUI(KC_TAB),    KC_DLR,  KC_PERC, KC_CIRC, KC_0,    KC_RPRN,
         KC_LCBR, LSFT(LCTL(KC_LEFT)),  KC_P5,         LSFT(LCTL(KC_RGHT)), KC_AT,            KC_MINS, KC_TAB,  KC_HASH, KC_SCLN, KC_RCBR,
-        KC_LBRC, KC_P1,                KC_P2,          KC_P3,               KC_P0,            KC_AMPR, XXXXXXX, XXXXXXX, XXXXXXX, KC_RBRC,
+        KC_LBRC, KC_P1,                KC_P2,          KC_P3,               KC_P0,            KC_AMPR, APP_SWITCH, XXXXXXX, KC_CAPS, KC_RBRC,
                         KC_LALT, MO(LAYER_NAV), LCTL(KC_DEL),               KC_QUES, _______
     ),
 
@@ -161,6 +165,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         LGUI(KC_LEFT), XXXXXXX, LGUI(KC_RGHT), LCTL(LSFT(KC_F6)),   XXXXXXX,    KC_PGDN, KC_4, KC_5, KC_6, KC_BTN2,
         LCTL(KC_Z), XXXXXXX, XXXXXXX, _______, _______,                          KC_0,    KC_1, KC_2, KC_3, KC_BSPC,
                         _______, _______, KC_GRV,                                LGUI(KC_I), XXXXXXX
+    ),
+
+    [LAYER_MOUSE] = LAYOUT(
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                        _______, KC_BTN1, KC_BTN2,       _______, _______
     ),
 };
 // clang-format on
@@ -185,8 +196,44 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
+        case APP_SWITCH:
+            if (record->event.pressed) {
+                register_code(KC_LGUI);
+                tap_code(KC_TAB);
+            } else {
+                unregister_code(KC_LGUI);
+            }
+            return false;
     }
     return true;
+}
+
+void process_combo_event(uint16_t combo_index, bool pressed) {
+    switch (combo_index) {
+        case COMBO_HASH:
+            if (pressed) {
+                if (IS_LAYER_ON(LAYER_NAV)) {
+                    tap_code16(KC_QUOT);
+                    tap_code(KC_UP);
+                    tap_code(KC_LEFT);
+                } else {
+                    tap_code16(KC_HASH);
+                }
+            }
+            break;
+        case COMBO_NAV_89:
+            if (pressed && IS_LAYER_ON(LAYER_NAV)) {
+                tap_code16(KC_QUOT);
+                tap_code(KC_COMM);
+                tap_code(KC_DOWN);
+            }
+            break;
+    }
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    charybdis_set_pointer_dragscroll_enabled(layer_state_cmp(state, LAYER_MOUSE));
+    return state;
 }
 
 tap_dance_action_t tap_dance_actions[] = {
