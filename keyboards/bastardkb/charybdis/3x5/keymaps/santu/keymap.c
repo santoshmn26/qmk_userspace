@@ -16,8 +16,10 @@ enum tap_dance_codes {
 enum custom_keycodes {
     AT_OR_HIDE = SAFE_RANGE, // W+E: KC_AT on DEFAULT, LCTL(KC_B) on NAV
     AND_OR_DOT,              // ,+.: KC_AMPR on DEFAULT, KC_DOT on NUM
-    APP_SWITCH,              // Hold: LGUI down + TAB; release: LGUI up
+    APP_SWITCH,              // Press: LGUI+TAB opens switcher; Tab cycles; release SYM commits
 };
+
+static bool app_switching = false;
 
 // ── Combo key arrays ────────────────────────────────────────────
 const uint16_t PROGMEM hash_combo[]        = {KC_K,    KC_L,                              COMBO_END};
@@ -101,13 +103,13 @@ combo_t key_combos[] = {
     [COMBO_SEL_HOME]       = COMBO(sel_home_combo,    LSFT(KC_HOME)),
     [COMBO_SEL_END]        = COMBO(sel_end_combo,     LSFT(KC_END)),
     [COMBO_PASTE_HIST]     = COMBO(paste_hist_combo,  LGUI(KC_V)),
-    [COMBO_CMD_PALETTE]    = COMBO(cmd_palette_combo, LCTL(LSFT(KC_P))),
-    [COMBO_FIND]           = COMBO(find_combo,        LCTL(KC_F)),
-    [COMBO_TOP]            = COMBO(top_combo,         LCTL(KC_HOME)),
-    [COMBO_BOT]            = COMBO(bot_combo,         LCTL(KC_END)),
-    [COMBO_CTRL_TAB]       = COMBO(ctrl_tab_combo,    LCTL(KC_TAB)),
-    [COMBO_TERMINAL]       = COMBO(terminal_combo,    LCTL(KC_J)),
-    [COMBO_CTRL_SHIFT_TAB] = COMBO(cst_combo,         LCTL(LSFT(KC_TAB))),
+    [COMBO_CMD_PALETTE]    = COMBO(cmd_palette_combo, LGUI(LSFT(KC_P))),
+    [COMBO_FIND]           = COMBO(find_combo,        LGUI(KC_F)),
+    [COMBO_TOP]            = COMBO(top_combo,         LGUI(KC_HOME)),
+    [COMBO_BOT]            = COMBO(bot_combo,         LGUI(KC_END)),
+    [COMBO_CTRL_TAB]       = COMBO(ctrl_tab_combo,    LGUI(KC_TAB)),
+    [COMBO_TERMINAL]       = COMBO(terminal_combo,    LGUI(KC_J)),
+    [COMBO_CTRL_SHIFT_TAB] = COMBO(cst_combo,         LGUI(LSFT(KC_TAB))),
     [COMBO_WIN_LEFT]       = COMBO(win_left_combo,    MEH(KC_X)),
     [COMBO_WIN_RIGHT]      = COMBO(win_right_combo,   MEH(KC_B)),
     [COMBO_WIN_MAX]        = COMBO(win_max_combo,     MEH(KC_M)),
@@ -142,10 +144,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [LAYER_NAV] = LAYOUT(
         KC_HOME,    KC_UP,      KC_END,     KC_ENT,  KC_KP_PLUS,         KC_KP_ASTERISK,      KC_COMM,             KC_MINS, KC_QUOT,  LALT(KC_BSPC),
         KC_LEFT,    KC_DOWN,    KC_RGHT,    KC_DEL,  KC_EQL,             LCTL(LALT(KC_TAB)),  KC_BSPC,             KC_UNDS, KC_DQUO,  KC_COLN,
-        LCTL(KC_C), LCTL(KC_V), KC_LALT,   KC_BSPC, KC_BSLS,            KC_PIPE,             LGUI(LCTL(KC_LEFT)), KC_LT,   KC_GT,    KC_QUES,
-                        LCTL(KC_A), _______, KC_TILD,                    KC_LSFT, KC_ESC
+        LGUI(KC_C), LGUI(KC_V), KC_LALT,   KC_BSPC, KC_BSLS,            KC_PIPE,             LGUI(LCTL(KC_LEFT)), KC_LT,   KC_GT,    KC_QUES,
+        LGUI(KC_A), _______, KC_TILD,                    KC_LSFT, KC_ESC
     ),
-
     [LAYER_SYM] = LAYOUT(
         KC_LPRN, LGUI(KC_LEFT),        LGUI(KC_UP),   LGUI(KC_RGHT),        LGUI(KC_TAB),    KC_DLR,  KC_PERC, KC_CIRC, KC_0,    KC_RPRN,
         KC_LCBR, LSFT(LCTL(KC_LEFT)),  KC_P5,         LSFT(LCTL(KC_RGHT)), KC_AT,            KC_MINS, KC_TAB,  KC_HASH, KC_SCLN, KC_RCBR,
@@ -170,7 +171,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [LAYER_MOUSE] = LAYOUT(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX, KC_BTN1, KC_BTN2, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                         _______, KC_BTN1, KC_BTN2,       _______, _______
     ),
 };
@@ -198,10 +199,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case APP_SWITCH:
             if (record->event.pressed) {
+                app_switching = true;
                 register_code(KC_LGUI);
                 tap_code(KC_TAB);
-            } else {
-                unregister_code(KC_LGUI);
             }
             return false;
     }
@@ -232,6 +232,11 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
+    // Release LGUI when SYM layer turns off, committing the app switcher selection
+    if (app_switching && !layer_state_cmp(state, LAYER_SYM)) {
+        unregister_code(KC_LGUI);
+        app_switching = false;
+    }
     charybdis_set_pointer_dragscroll_enabled(layer_state_cmp(state, LAYER_MOUSE));
     return state;
 }
