@@ -16,7 +16,9 @@ enum tap_dance_codes {
 enum custom_keycodes {
     AT_OR_HIDE = SAFE_RANGE, // W+E: KC_AT on DEFAULT, LCTL(KC_B) on NAV
     AND_OR_DOT,              // ,+.: KC_AMPR on DEFAULT, KC_DOT on NUM
-    APP_SWITCH,              // Press: LGUI+TAB opens switcher; Tab cycles; release SYM commits
+    APP_SWITCH,              // Press: LGUI+TAB opens switcher forward; Tab cycles; release SYM commits
+    APP_SWITCH_BACK,         // Press: LGUI+SHIFT+TAB opens switcher backward; release SYM commits
+    DRAG_SCROLL,             // Hold (key 21 in mouse layer): trackball scrolls; release: cursor
 };
 
 static bool app_switching = false;
@@ -150,7 +152,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [LAYER_SYM] = LAYOUT(
         KC_LPRN, LGUI(KC_LEFT),        LGUI(KC_UP),   LGUI(KC_RGHT),        LGUI(KC_TAB),    KC_DLR,  KC_PERC, KC_CIRC, KC_0,    KC_RPRN,
         KC_LCBR, LSFT(LCTL(KC_LEFT)),  KC_P5,         LSFT(LCTL(KC_RGHT)), KC_AT,            KC_MINS, KC_TAB,  KC_HASH, KC_SCLN, KC_RCBR,
-        KC_LBRC, KC_P1,                KC_P2,          KC_P3,               KC_P0,            KC_AMPR, APP_SWITCH, XXXXXXX, KC_CAPS, KC_RBRC,
+        KC_LBRC, KC_P1,                KC_P2,          KC_P3,               KC_P0,            KC_AMPR, APP_SWITCH, APP_SWITCH_BACK, KC_CAPS, KC_RBRC,
                         KC_LALT, MO(LAYER_NAV), LCTL(KC_DEL),               KC_QUES, _______
     ),
 
@@ -169,10 +171,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [LAYER_MOUSE] = LAYOUT(
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, KC_BTN1, KC_BTN2, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                        _______, KC_BTN1, KC_BTN2,       _______, _______
+        XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        DRAG_SCROLL, KC_BTN1, KC_BTN2, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                        _______, KC_BTN1, KC_BTN2,           _______, _______
     ),
 };
 // clang-format on
@@ -203,6 +205,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 register_code(KC_LGUI);
                 tap_code(KC_TAB);
             }
+            return false;
+        case APP_SWITCH_BACK:
+            if (record->event.pressed) {
+                app_switching = true;
+                register_code(KC_LGUI);
+                tap_code16(LSFT(KC_TAB));
+            }
+            return false;
+        case DRAG_SCROLL:
+            charybdis_set_pointer_dragscroll_enabled(record->event.pressed);
             return false;
     }
     return true;
@@ -237,7 +249,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         unregister_code(KC_LGUI);
         app_switching = false;
     }
-    charybdis_set_pointer_dragscroll_enabled(layer_state_cmp(state, LAYER_MOUSE));
+    // Safety: if mouse layer is released while DRAG_SCROLL is still physically held, stop scrolling
+    if (!layer_state_cmp(state, LAYER_MOUSE)) {
+        charybdis_set_pointer_dragscroll_enabled(false);
+    }
     return state;
 }
 
