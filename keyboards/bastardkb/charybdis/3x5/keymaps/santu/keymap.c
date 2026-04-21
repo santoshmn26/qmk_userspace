@@ -35,11 +35,11 @@ const uint16_t PROGMEM tab_combo[]         = {KC_S,    KC_D,                    
 const uint16_t PROGMEM shift_tab_combo[]   = {KC_S,    KC_F,                              COMBO_END};
 const uint16_t PROGMEM sel_home_combo[]    = {KC_Q,    KC_W,                              COMBO_END};
 const uint16_t PROGMEM sel_end_combo[]     = {KC_O,    KC_P,                              COMBO_END};
+const uint16_t PROGMEM copy_hist_combo[]   = {KC_X,    KC_V,                              COMBO_END};
 const uint16_t PROGMEM paste_hist_combo[]  = {KC_X,    KC_C,                              COMBO_END};
 const uint16_t PROGMEM cmd_palette_combo[] = {KC_D,    KC_K,                              COMBO_END};
 const uint16_t PROGMEM find_combo[]        = {KC_F,    KC_J,                              COMBO_END};
 const uint16_t PROGMEM top_combo[]         = {KC_W,    KC_R,                              COMBO_END};
-const uint16_t PROGMEM bot_combo[]         = {KC_X,    KC_V,                              COMBO_END};
 const uint16_t PROGMEM ctrl_tab_combo[]    = {KC_J,    KC_K,    KC_L,                     COMBO_END};
 const uint16_t PROGMEM terminal_combo[]    = {KC_S,    KC_L,                              COMBO_END};
 const uint16_t PROGMEM cst_combo[]         = {KC_U,    KC_I,    KC_O,                     COMBO_END};
@@ -73,7 +73,6 @@ enum combo_events {
     COMBO_CMD_PALETTE,
     COMBO_FIND,
     COMBO_TOP,
-    COMBO_BOT,
     COMBO_CTRL_TAB,
     COMBO_TERMINAL,
     COMBO_CTRL_SHIFT_TAB,
@@ -89,6 +88,7 @@ enum combo_events {
     COMBO_CLAUDE_APP,
     COMBO_LGUI_A,
     COMBO_NAV_89,
+    COMBO_COPY_HIST,
 };
 
 // ── Combo table ─────────────────────────────────────────────────
@@ -108,7 +108,6 @@ combo_t key_combos[] = {
     [COMBO_CMD_PALETTE]    = COMBO(cmd_palette_combo, LGUI(LSFT(KC_P))),
     [COMBO_FIND]           = COMBO(find_combo,        LGUI(KC_F)),
     [COMBO_TOP]            = COMBO(top_combo,         LGUI(KC_HOME)),
-    [COMBO_BOT]            = COMBO(bot_combo,         LGUI(KC_END)),
     [COMBO_CTRL_TAB]       = COMBO(ctrl_tab_combo,    LGUI(KC_TAB)),
     [COMBO_TERMINAL]       = COMBO(terminal_combo,    LGUI(KC_J)),
     [COMBO_CTRL_SHIFT_TAB] = COMBO(cst_combo,         LGUI(LSFT(KC_TAB))),
@@ -124,6 +123,7 @@ combo_t key_combos[] = {
     [COMBO_CLAUDE_APP]     = COMBO(claude_combo,      MEH(KC_S)),
     [COMBO_LGUI_A]         = COMBO(lgui_a_combo,      LGUI(KC_A)),
     [COMBO_NAV_89]         = COMBO_ACTION(nav_89_combo),
+    [COMBO_COPY_HIST]      = COMBO(copy_hist_combo,   LGUI(KC_C)),
 };
 // --------------------------------------------------------------
 // keyboard structure:
@@ -171,8 +171,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [LAYER_MOUSE] = LAYOUT(
-        XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        LGUI(KC_Z),     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        LGUI(KC_X),  LGUI(KC_C), LGUI(KC_V), XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         DRAG_SCROLL, KC_BTN1, KC_BTN2, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                         _______, KC_BTN1, KC_BTN2,           _______, _______
     ),
